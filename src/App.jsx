@@ -207,13 +207,15 @@ const App = () => {
     switch (currentStep) {
       case STEPS.WELCOME:
         return (
-          <div className="welcome-screen">
-            <h1>Aleato</h1>
-            <p className="subtitle">Armá equipos aleatorios fácil y rápido</p>
-            <button onClick={() => setCurrentStep(STEPS.SETTINGS)}>
-              Comenzar
-            </button>
-          </div>
+<div className="welcome-screen">
+  <div className="welcome-row">
+    <h1>Aleato</h1>
+    <p className="subtitle">Armá equipos aleatorios fácil y rápido</p>
+  </div>
+  <button onClick={() => setCurrentStep(STEPS.SETTINGS)}>
+    Comenzar
+  </button>
+</div>
         );
 
       case STEPS.SETTINGS:
@@ -373,9 +375,11 @@ const App = () => {
 
   return (
     <div className="App">
-      <header>
-        <h1>Aleato</h1>
-      </header>
+      {currentStep !== STEPS.WELCOME && (
+    <header className="header">
+      <h1>Aleato</h1>
+    </header>
+  )}
       <main>
         {renderStep()}
       </main>
