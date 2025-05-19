@@ -222,7 +222,7 @@ const App = () => {
       case STEPS.SETTINGS:
         return (
           <div className="settings-screen">
-            <h2>Configuración de Equipos</h2>
+            <h2 className="title-config">Configuración de Equipos</h2>
             <div className="settings-form">
               <div className="setting-item">
                 <label>
@@ -402,8 +402,14 @@ const App = () => {
       />
       {isLoading && (
         <div className="loading-overlay">
-          <div className="loading-icon">🔄</div>
-          <p>Generando equipos...</p>
+          <div className="loading-container">
+            <div className="loading-teams">
+              <div className="team-circle team-1"></div>
+              <div className="team-circle team-2"></div>
+              <div className="team-circle team-3"></div>
+            </div>
+            <p>Generando equipos...</p>
+          </div>
         </div>
       )}
       <footer className="footer">
@@ -415,7 +421,7 @@ const App = () => {
             <a href="#" onClick={(e) => {
               e.preventDefault();
               toast.info('¡Gracias por usar Aleato! 🎮');
-            }}>Acerca de</a>
+            }}>Acerca de Aleato</a>
           </div>
         </div>
       </footer>
