@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PlayerInput from './components/PlayerInput';
@@ -22,7 +22,8 @@ const formatName = (name) => {
 };
 
 const App = () => {
-  const { 
+
+  const {
     players,
     teams,
     addPlayer,
@@ -37,7 +38,7 @@ const App = () => {
     clearTeams,
     setPlayers
   } = useTeamGenerator();
-  
+
   const [currentStep, setCurrentStep] = useState(STEPS.WELCOME);
   const [isLoading, setIsLoading] = useState(false);
   const [bulkInput, setBulkInput] = useState('');
@@ -49,10 +50,10 @@ const App = () => {
       toast.error('Por favor ingresa un nombre válido');
       return;
     }
-    
+
     const totalNeeded = getTotalPlayersNeeded(numTeams, teamSize);
     const remaining = totalNeeded - players.length;
-    
+
     if (remaining <= 0) {
       toast.warning('Ya se alcanzó el límite de jugadores');
       return;
@@ -98,7 +99,7 @@ const App = () => {
 
     let added = 0;
     const initialCount = players.length;
-    
+
     for (const name of names) {
       if (added >= remainingSlots) break;
       if (!players.includes(name) && addPlayer(name)) {
@@ -109,7 +110,7 @@ const App = () => {
     if (added > 0) {
       const newTotal = initialCount + added;
       const remaining = totalNeeded - newTotal;
-      
+
       // Notificaciones estratégicas para bulk input
       if (remaining === 0) {
         toast.success('¡Lista completa! Ya puedes generar los equipos');
@@ -118,7 +119,7 @@ const App = () => {
       } else {
         toast.success(`Se agregaron ${added} jugadores`);
       }
-      
+
       setBulkInput('');
     }
   };
@@ -143,7 +144,7 @@ const App = () => {
   const handleShare = async () => {
     const teamsText = formatTeamsText();
     if (!teamsText) return;
-    
+
     try {
       await navigator.clipboard.writeText(teamsText);
       toast.success('¡Equipos copiados al portapapeles!');
@@ -166,7 +167,7 @@ const App = () => {
 
   const formatTeamsText = () => {
     if (!teams.length) return '';
-    
+
     return teams
       .map(team => `${team.name}:\n${team.players.join('\n')}`)
       .join('\n\n');
@@ -178,7 +179,7 @@ const App = () => {
 
     const encodedText = encodeURIComponent(teamsText);
     const whatsappUrl = `https://wa.me/?text=${encodedText}`;
-    
+
     window.open(whatsappUrl, '_blank');
   };
 
@@ -256,7 +257,10 @@ const App = () => {
                 <button onClick={() => setCurrentStep(STEPS.WELCOME)}>
                   Volver
                 </button>
-                <button onClick={() => setCurrentStep(STEPS.PLAYERS)}>
+                <button
+                  onClick={() => setCurrentStep(STEPS.PLAYERS)}
+                  disabled={numTeams < 2 || teamSize < 2}
+                >
                   Continuar
                 </button>
               </div>
@@ -264,7 +268,7 @@ const App = () => {
           </div>
         );
 
-      case STEPS.PLAYERS:
+      case STEPS.PLAYERS: {
         const playersRemaining = getPlayersRemaining(numTeams, teamSize);
         return (
           <div className="players-screen">
@@ -273,10 +277,10 @@ const App = () => {
                 <>
                   <p>Faltan {playersRemaining} jugadores</p>
                   <div className="progress-bar">
-                    <div 
+                    <div
                       className="progress-fill"
-                      style={{ 
-                        width: `${(players.length / getTotalPlayersNeeded(numTeams, teamSize)) * 100}%` 
+                      style={{
+                        width: `${(players.length / getTotalPlayersNeeded(numTeams, teamSize)) * 100}%`
                       }}
                     />
                   </div>
@@ -287,8 +291,8 @@ const App = () => {
             </div>
 
             <div className="input-sections">
-              <PlayerInput 
-                onAddPlayer={handleAddPlayer} 
+              <PlayerInput
+                onAddPlayer={handleAddPlayer}
                 disabled={getPlayersRemaining(numTeams, teamSize) <= 0}
               />
 
@@ -302,7 +306,7 @@ const App = () => {
                   aria-label="Lista de jugadores"
                   disabled={getPlayersRemaining(numTeams, teamSize) <= 0}
                 />
-                <button 
+                <button
                   onClick={handleBulkInput}
                   disabled={getPlayersRemaining(numTeams, teamSize) <= 0}
                 >
@@ -318,7 +322,7 @@ const App = () => {
                   {players.map(player => (
                     <div key={player} className="player-item">
                       <span className="player-name">{player}</span>
-                      <button 
+                      <button
                         className="remove-player"
                         onClick={() => handleRemovePlayer(player)}
                         title="Eliminar jugador"
@@ -336,7 +340,7 @@ const App = () => {
               <button onClick={() => setCurrentStep(STEPS.SETTINGS)}>
                 ← Volver
               </button>
-              <button 
+              <button
                 onClick={handleGenerateTeams}
                 disabled={playersRemaining > 0}
               >
@@ -345,24 +349,25 @@ const App = () => {
             </div>
           </div>
         );
+      }
 
       case STEPS.RESULTS:
         return (
           <div className="results-section">
             <TeamDisplay teams={teams} />
-            
+
             <div className="actions">
               <button onClick={handleShare}>
                 📋 Copiar Equipos
               </button>
-              <button 
+              <button
                 onClick={handleShareWhatsApp}
                 className="whatsapp-btn"
               >
                 <span>📱 Compartir por WhatsApp</span>
               </button>
               <button onClick={handleReset}>
-                🔄 Volver a Empezar
+                ⏪ Volver al Inicio
               </button>
             </div>
           </div>
@@ -377,7 +382,7 @@ const App = () => {
     <div className="App">
       {currentStep !== STEPS.WELCOME && (
     <header className="header">
-      <h1>Aleato</h1>
+      <h1 onClick={() => setCurrentStep(STEPS.WELCOME)} style={{ cursor: 'pointer' }}>Aleato</h1>
     </header>
   )}
       <main>
@@ -401,6 +406,19 @@ const App = () => {
           <p>Generando equipos...</p>
         </div>
       )}
+      <footer className="footer">
+        <div className="footer-content">
+          <p>© 2024 Aleato - Generador de equipos aleatorios</p>
+          <div className="footer-links">
+            <a href="https://github.com/nachopaezz/aleato" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <span className="separator">•</span>
+            <a href="#" onClick={(e) => {
+              e.preventDefault();
+              toast.info('¡Gracias por usar Aleato! 🎮');
+            }}>Acerca de</a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
