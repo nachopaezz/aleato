@@ -5,6 +5,8 @@ import PlayerInput from './components/PlayerInput';
 import TeamDisplay from './components/TeamDisplay';
 import useTeamGenerator from './hooks/useTeamGenerator';
 import './App.css';
+import { FiCopy, FiArrowLeft } from 'react-icons/fi';
+import { FaWhatsapp } from 'react-icons/fa';
 
 const STEPS = {
   WELCOME: 'welcome',
@@ -358,16 +360,19 @@ const App = () => {
 
             <div className="actions">
               <button onClick={handleShare}>
-                📋 Copiar Equipos
+                <FiCopy style={{ marginRight: 8, fontSize: 20 }} />
+                Copiar Equipos
               </button>
               <button
                 onClick={handleShareWhatsApp}
                 className="whatsapp-btn"
               >
-                <span>📱 Compartir por WhatsApp</span>
+                <FaWhatsapp style={{ marginRight: 8, fontSize: 20, color: 'white' }} />
+                Compartir por WhatsApp
               </button>
               <button onClick={handleReset}>
-                ⏪ Volver al Inicio
+                <FiArrowLeft style={{ marginRight: 8, fontSize: 20 }} />
+                Volver al Inicio
               </button>
             </div>
           </div>
